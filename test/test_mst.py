@@ -4,6 +4,7 @@ from mst import Graph
 from sklearn.metrics import pairwise_distances
 
 
+
 def check_mst(adj_mat: np.ndarray, 
               mst: np.ndarray, 
               expected_weight: int, 
@@ -34,7 +35,19 @@ def check_mst(adj_mat: np.ndarray,
         for j in range(i+1):
             total += mst[i, j]
     assert approx_equal(total, expected_weight), 'Proposed MST has incorrect expected weight'
-
+    
+    #we check that the MST has n-1 edges
+    edge_count = 0 #initialize counter
+    #iterating through the lower triangle of the matrix
+    for i in range(mst.shape[0]): 
+        for j in range(i+1):
+            if mst[i,j] != 0: #if the edge exists
+                edge_count += 1 #increment the counter
+    assert edge_count == mst.shape[0] - 1 #assert that the number of edges is n-1
+    
+    #check that MST and adjacency matrix have the same dimensions
+    assert mst.shape == adj_mat.shape        
+    
 
 def test_mst_small():
     """
@@ -71,4 +84,15 @@ def test_mst_student():
     TODO: Write at least one unit test for MST construction.
     
     """
-    pass
+    #we test that an error is raised when a graph is not connected 
+    disconnected_graph = './data/disconnected.csv' #to make this, i took the small graph and added a disconnected fifth node
+    g = Graph(disconnected_graph) #create instance of graph
+    with pytest.raises(ValueError): #assert that an error is raised when the graph is not connected
+         g.construct_mst()
+         
+    #test for an empty graph (i'll note that a warning is raised when the graph is empty due to how the file is loaded, but the function runs)
+    empty_graph = './data/empty.csv' #blank csv file 
+    empty_g = Graph(empty_graph) #create instance of graph
+    with pytest.raises(ValueError): #assert that an error is raised when the graph is empty
+        empty_g.construct_mst()
+    

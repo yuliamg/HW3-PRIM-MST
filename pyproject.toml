@@ -10,7 +10,7 @@ pythonpath = [
 ]
 
 [project]
-name = "prim"
+name = "mst"
 requires-python = ">= 3.7"
 authors = [{name = "Yulia Gutierrez", email = "yulia.gutierrez@ucsf.edu"}]
 readme = "README.md"

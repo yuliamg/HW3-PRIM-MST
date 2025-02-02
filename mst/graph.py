@@ -23,8 +23,8 @@ class Graph:
 
     def _load_adjacency_matrix_from_csv(self, path: str) -> np.ndarray:
         with open(path) as f:
-            return np.loadtxt(f, delimiter=',')
-
+            return np.loadtxt(f, delimiter=',')        
+        
     def construct_mst(self):
         """
     
@@ -41,4 +41,41 @@ class Graph:
         `heapify`, `heappop`, and `heappush` functions.
 
         """
-        self.mst = None
+        n = self.adj_mat.shape[0] #the number of nodes in the graph is the number of rows (or columns) in the adjacency matrix
+        
+        if n == 0: #if the adjacency matrix is empty, raise a ValueError
+            raise ValueError()
+    
+        visited = [] #initialize a list to keep track of which nodes have been visited
+        
+        mst = np.zeros((n, n)) #create empty nxn matrix to store the MST 
+        
+        start = np.random.randint(n) #pick a random starting node
+        
+        visited.append(start) # add the starting node to the visited list
+
+        #initialize a priority queue to store the edges of all the nodes connected to the starting node
+        #where each edge is a tuple of the form (weight, start node, end node)
+        pq = [(self.adj_mat[start, end], start, end) for end in range(n) if self.adj_mat[start, end] != 0]
+        
+        heapq.heapify(pq) #this turns the list into a heap, which will allow us to get the edge with the smallest weight
+        
+        #while the priority queue is not empty
+        while len(pq) != 0:
+            weight, start, end = heapq.heappop(pq) #getting the edge with the smallest weight
+            if end not in visited: #if the end node has not been visited
+                mst[start, end] = weight #add the edge to the MST
+                mst[end, start] = weight 
+
+                visited.append(end) #add end node to the visited list
+                
+                #add the end node's edges to the priority queue (ensuring that they haven't already been visited)
+                for i, edge in enumerate(self.adj_mat[end]): 
+                    if edge != 0 and i not in visited: 
+                        heapq.heappush(pq, (edge, end, i)) #adding to the heap 
+        
+        #at the end of prim's algorithm, we should have visited all the nodes in the graph
+        if len(visited) != n:
+            raise ValueError() #otherwise, raise an error because the graph is not connected
+        #add as attribute 
+        self.mst = mst

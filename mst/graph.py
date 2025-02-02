@@ -69,10 +69,10 @@ class Graph:
 
                 visited.append(end) #add end node to the visited list
                 
-                #add the end node's edges to the priority queue (ensuring that they haven't already been visited)
-                for i, edge in enumerate(self.adj_mat[end]): 
-                    if edge != 0 and i not in visited: 
-                        heapq.heappush(pq, (edge, end, i)) #adding to the heap 
+                #add the end node's connected edges to the priority queue (ensuring that they haven't already been visited)
+                for next, weight in enumerate(self.adj_mat[end]): 
+                    if weight != 0 and next not in visited: 
+                        heapq.heappush(pq, (weight, end, next)) #adding to the heap 
         
         #at the end of prim's algorithm, we should have visited all the nodes in the graph
         if len(visited) != n:

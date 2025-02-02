@@ -4,6 +4,11 @@
 
 In this assignment, you'll implement Prim's algorithm, a non-trivial greedy algorithm used to construct minimum spanning trees. 
 
+## Methods Description 
+
+- The function construct_mst
+
+
 ## Tasks
 
 ### Coding
